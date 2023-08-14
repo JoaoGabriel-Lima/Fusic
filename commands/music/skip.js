@@ -21,9 +21,16 @@ module.exports = {
       await distube.skip(guild);
       interaction.reply({
         content: "`🎶 Música pulada`",
-        ephemeral: false,
+        ephemeral: true,
       });
-      setTimeout(() => interaction.deleteReply(), 5000);
+
+      setTimeout(() => {
+        try {
+          interaction.deleteReply();
+        } catch (error) {
+          return null;
+        }
+      }, 5000);
     } catch (error) {
       const embed = new EmbedBuilder();
       embed.setTitle("Ocorreu um erro ao pular a música");

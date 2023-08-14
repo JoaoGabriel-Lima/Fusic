@@ -3,8 +3,8 @@ const distube = require("../../index.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("sair")
-    .setDescription("Sai do canal de voz"),
+    .setName("autoplay")
+    .setDescription("Ativa ou desativa o modo autoplay"),
   async execute(interaction) {
     const { member, guild, channel } = interaction;
 
@@ -24,22 +24,37 @@ module.exports = {
     }
 
     try {
-      await queue.stop();
-      interaction.reply({
-        content: "`🎶 Fusen saiu do canal de voz`",
-        ephemeral: true,
-      });
+      const autoplay = queue.toggleAutoplay();
+      if (autoplay) {
+        interaction.reply({
+          content: "`🎶 Modo autoplay ativado`",
+          ephemeral: true,
+        });
 
-      setTimeout(() => {
-        try {
-          interaction.deleteReply();
-        } catch (error) {
-          return null;
-        }
-      }, 5000);
+        setTimeout(() => {
+          try {
+            interaction.deleteReply();
+          } catch (error) {
+            return null;
+          }
+        }, 5000);
+      } else {
+        interaction.reply({
+          content: "`🎶 Modo autoplay desativado`",
+          ephemeral: true,
+        });
+
+        setTimeout(() => {
+          try {
+            interaction.deleteReply();
+          } catch (error) {
+            return null;
+          }
+        }, 5000);
+      }
     } catch (error) {
       const embed = new EmbedBuilder();
-      embed.setTitle("Ocorreu um erro ao alterar o volume");
+      embed.setTitle("Ocorreu um erro ao ativar/desativar o modo autoplay");
       embed.setColor(0xd12f2f);
       embed.setDescription(error.message);
 

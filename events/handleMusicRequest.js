@@ -87,14 +87,18 @@ module.exports = {
         await queue.setVolume(volume);
       }
 
-      const msg = await channel.send({
-        content: "`🎶 Pedido recebido`",
-        ephemeral: false,
-      });
-      // remove the message after 5 seconds
-      setTimeout(() => {
-        msg.delete();
-      }, 5000);
+      // const msg = await channel.send({
+      //   content: "`🎶 Pedido recebido`",
+      //   ephemeral: false,
+      // });
+      // // remove the message after 5 seconds
+      // try {
+      //   setTimeout(() => {
+      //     msg.delete();
+      //   }, 5000);
+      // } catch (error) {
+      //   return null;
+      // }
     } catch (error) {
       const embed = new EmbedBuilder();
       embed.setTitle("Ocorreu um erro ao tocar a música");
@@ -106,9 +110,13 @@ module.exports = {
         embeds: [embed],
         ephemeral: true,
       });
-      setTimeout(() => {
-        msg.delete();
-      }, 5000);
+      try {
+        setTimeout(() => {
+          msg.delete();
+        }, 5000);
+      } catch (error) {
+        return null;
+      }
     }
     message.delete();
   },

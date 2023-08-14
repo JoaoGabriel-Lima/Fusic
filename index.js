@@ -21,6 +21,7 @@ const client = new Client({
 const distube = new DisTube(client, {
   emitNewSongOnly: true,
   leaveOnFinish: false,
+  leaveOnStop: false,
   emitAddSongWhenCreatingQueue: false,
   emitAddListWhenCreatingQueue: true,
   plugins: [

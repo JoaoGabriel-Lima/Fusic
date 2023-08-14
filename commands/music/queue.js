@@ -77,6 +77,7 @@ module.exports = {
       const response = await interaction.reply({
         embeds: [queueEmbed],
         components: [buttonRow],
+        ephemeral: true,
       });
       const collector = response.createMessageComponentCollector({
         componentType: ComponentType.Button,
@@ -124,6 +125,7 @@ module.exports = {
         await button.update({
           embeds: [queueEmbed],
           components: [buttonRow],
+          ephemeral: true,
         });
       });
     } catch (error) {

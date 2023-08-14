@@ -41,22 +41,28 @@ module.exports = {
       if (mode == "0") {
         interaction.reply({
           content: "`🎶 O modo de loop foi desativado`",
-          ephemeral: false,
+          ephemeral: true,
         });
       }
       if (mode == "1") {
         interaction.reply({
           content: "`🎶 O modo de loop vai repetir a música atual`",
-          ephemeral: false,
+          ephemeral: true,
         });
       }
       if (mode == "2") {
         interaction.reply({
           content: "`🎶 O modo de loop vai repetir a fila`",
-          ephemeral: false,
+          ephemeral: true,
         });
       }
-      setTimeout(() => interaction.deleteReply(), 5000);
+      setTimeout(() => {
+        try {
+          interaction.deleteReply();
+        } catch (error) {
+          return null;
+        }
+      }, 5000);
     } catch (error) {
       const embed = new EmbedBuilder();
       embed.setTitle("Ocorreu um erro ao alterar o volume");

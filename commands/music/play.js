@@ -76,13 +76,18 @@ module.exports = {
       }
       await interaction.editReply({
         content: "`🎶 Pedido recebido`",
-        ephemeral: false,
+        ephemeral: true,
       });
-      setTimeout(() => interaction.deleteReply(), 5000);
+      setTimeout(() => {
+        try {
+          interaction.deleteReply();
+        } catch (error) {
+          return null;
+        }
+      }, 5000);
     } catch (error) {
       const embed = new EmbedBuilder();
       embed.setTitle("Ocorreu um erro ao tocar a música");
-      console.log(error);
       embed.setColor(0xd12f2f);
       embed.setDescription(error.message);
 

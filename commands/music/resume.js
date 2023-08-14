@@ -28,16 +28,30 @@ module.exports = {
         await queue.resume();
         interaction.reply({
           content: "`🎶 Música despausada`",
-          ephemeral: false,
+          ephemeral: true,
         });
-        setTimeout(() => interaction.deleteReply(), 5000);
+
+        setTimeout(() => {
+          try {
+            interaction.deleteReply();
+          } catch (error) {
+            return null;
+          }
+        }, 5000);
       } else {
         await queue.pause();
         interaction.reply({
           content: "`🎶 Música pausada`",
-          ephemeral: false,
+          ephemeral: true,
         });
-        setTimeout(() => interaction.deleteReply(), 5000);
+
+        setTimeout(() => {
+          try {
+            interaction.deleteReply();
+          } catch (error) {
+            return null;
+          }
+        }, 5000);
       }
     } catch (error) {
       const embed = new EmbedBuilder();

@@ -56,9 +56,15 @@ module.exports = {
         text: `Duração: ${queue.formattedDuration}`,
       });
 
-      interaction.reply({ embeds: [embed] });
+      interaction.reply({ embeds: [embed], ephemeral: true });
 
-      setTimeout(() => interaction.deleteReply(), 10000);
+      setTimeout(() => {
+        try {
+          interaction.deleteReply();
+        } catch (error) {
+          return null;
+        }
+      }, 15000);
     } catch (error) {
       const embed = new EmbedBuilder();
       embed.setTitle("Ocorreu um erro ao mostrar a música atual");

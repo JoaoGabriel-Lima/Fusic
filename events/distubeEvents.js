@@ -48,12 +48,8 @@ distube
   //     setTimeout(() => msg.delete(), song.duration * 1000);
   //   });
   // })
-  .on("finish", (queue) => {
-    const embed = new EmbedBuilder();
-    embed.setDescription("Não há mais músicas na fila");
-    queue.textChannel.send({ embeds: [embed] });
-  })
-  .on("addSong", (queue, song) => {
+
+  .on("addSong", async (queue, song) => {
     const embed = new EmbedBuilder();
 
     embed.setAuthor({
@@ -78,7 +74,10 @@ distube
         queue.songs.length - 1
       }`,
     });
-    queue.textChannel.send({ embeds: [embed] });
+    const msg = await queue.textChannel.send({ embeds: [embed] });
+    setTimeout(() => {
+      msg.delete();
+    }, 5000);
   })
   .on("error", (channel, error) => {
     const embed = new EmbedBuilder();
@@ -92,17 +91,23 @@ distube
     embed.setDescription(`Não foi encontrado nenhum resultado para ${query}`);
     message.channel.send({ embeds: [embed] });
   })
-  .on("empty", (channel) => {
+  .on("empty", async (channel) => {
     const embed = new EmbedBuilder();
     embed.setTitle("Canal vazio");
     embed.setDescription("Ninguém está no canal de voz, saindo...");
-    channel.send({ embeds: [embed] });
+    const msg = await channel.textChannel.send({ embeds: [embed] });
+    setTimeout(() => {
+      msg.delete();
+    }, 5000);
   })
-  .on("addList", (queue, playlist) => {
+  .on("addList", async (queue, playlist) => {
     const embed = new EmbedBuilder();
     embed.setTitle(`Playlist adicionada`);
     embed.setColor(0x2fd193);
     embed.setDescription(`Playlist \`${playlist.name}\` adicionada à fila`);
     // console.log(playlist);
-    queue.textChannel.send({ embeds: [embed] });
+    const msg = await queue.textChannel.send({ embeds: [embed] });
+    setTimeout(() => {
+      msg.delete();
+    }, 5000);
   });

@@ -20,8 +20,8 @@ module.exports = {
       if (interaction.commandName == "play") {
         let choice = [];
         await ytsr(interaction.options.getString("query") || Random, {
-          safeSearch: true,
-          limit: 5,
+          safeSearch: false,
+          limit: 10,
         }).then((result) => {
           result.items.forEach((x) => {
             choice.push({ name: x.name, value: x.url });

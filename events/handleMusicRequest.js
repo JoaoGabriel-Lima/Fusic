@@ -92,13 +92,13 @@ module.exports = {
       //   ephemeral: false,
       // });
       // // remove the message after 5 seconds
-      // try {
       //   setTimeout(() => {
+      // try {
       //     msg.delete();
-      //   }, 5000);
       // } catch (error) {
       //   return null;
       // }
+      //   }, 5000);
     } catch (error) {
       const embed = new EmbedBuilder();
       embed.setTitle("Ocorreu um erro ao tocar a música");

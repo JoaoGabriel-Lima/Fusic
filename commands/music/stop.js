@@ -3,7 +3,7 @@ const distube = require("../../index.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("sair")
+    .setName("desconectar")
     .setDescription("Sai do canal de voz"),
   async execute(interaction) {
     const { member, guild, channel } = interaction;
@@ -14,17 +14,21 @@ module.exports = {
         `Você não pode usar um comando de música em um canal diferente do meu <#${guild.members.me.voice.channelId}>`
       );
       embed.setColor(0xd12f2f);
-      return interaction.reply({ embeds: [embed] });
+      return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     const queue = distube.getQueue(guild);
     if (!queue) {
       embed.setTitle("Não há músicas na fila");
-      return interaction.reply({ embeds: [embed] });
+      return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     try {
       await queue.stop();
+      // disconnect from voice channel
+      await distube.voices.leave(guild);
+      global.sendExitMsg(queue);
+      queue.voice.leave();
       interaction.reply({
         content: "`🎶 Fusen saiu do canal de voz`",
         ephemeral: true,

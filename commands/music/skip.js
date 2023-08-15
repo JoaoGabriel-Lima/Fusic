@@ -3,7 +3,7 @@ const distube = require("../../index.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("skip")
+    .setName("pular")
     .setDescription("Pula a música atual"),
   async execute(interaction) {
     const { member, guild, channel } = interaction;
@@ -14,7 +14,7 @@ module.exports = {
         `Você não pode usar um comando de música em um canal diferente do meu <#${guild.members.me.voice.channelId}>`
       );
       embed.setColor(0xd12f2f);
-      return interaction.reply({ embeds: [embed] });
+      return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     try {

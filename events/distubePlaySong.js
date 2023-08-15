@@ -143,6 +143,7 @@ const sendExitMsg = async (queue) => {
 
   playing.push(static);
 };
+global.sendExitMsg = sendExitMsg;
 
 distube.on("playSong", async (queue, track) => {
   if (playing.length > 0) {
@@ -418,5 +419,9 @@ distube.on("playSong", async (queue, track) => {
 });
 
 distube.on("finish", async (queue) => {
+  await sendExitMsg(queue);
+});
+distube.on("disconnect", async (queue) => {
+  console.log("Oiii");
   await sendExitMsg(queue);
 });

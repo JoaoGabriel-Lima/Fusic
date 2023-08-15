@@ -21,7 +21,7 @@ module.exports = {
         `Você não pode usar um comando de música em um canal diferente do meu <#${guild.members.me.voice.channelId}>`
       );
       embed.setColor(0xd12f2f);
-      return interaction.reply({ embeds: [embed] });
+      return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     if (
@@ -31,7 +31,7 @@ module.exports = {
     ) {
       embed.setTitle("Você não especificou o volume");
       embed.setColor(0xd12f2f);
-      return interaction.reply({ embeds: [embed] });
+      return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     const queue = distube.getQueue(guild);
@@ -39,7 +39,7 @@ module.exports = {
 
     if (!queue) {
       embed.setTitle("Não há músicas na fila");
-      return interaction.reply({ embeds: [embed] });
+      return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     try {

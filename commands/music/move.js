@@ -3,7 +3,7 @@ const distube = require("../../index.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("move")
+    .setName("mover")
     .setDescription("Move uma música na fila")
     .addIntegerOption((option) =>
       option
@@ -19,7 +19,7 @@ module.exports = {
     ),
   async execute(interaction) {
     const { member, guild, channel } = interaction;
-    await interaction.deferReply({ ephemeral: false });
+    await interaction.deferReply({ ephemeral: false, ephemeral: true });
 
     const embed = new EmbedBuilder();
     if (!member.voice.channelId === guild.members.me.voice.channelId) {
@@ -27,7 +27,7 @@ module.exports = {
         `Você não pode usar um comando de música em um canal diferente do meu <#${guild.members.me.voice.channelId}>`
       );
       embed.setColor(0xd12f2f);
-      return interaction.editReply({ embeds: [embed] });
+      return interaction.editReply({ embeds: [embed], ephemeral: true });
     }
 
     const tracks = interaction.options.getInteger("musica");

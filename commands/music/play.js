@@ -9,7 +9,7 @@ const fs = require("fs");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("play")
+    .setName("tocar")
     .setDescription("Toca uma música")
     .addStringOption((option) =>
       option
@@ -28,7 +28,7 @@ module.exports = {
     if (!voiceChannel) {
       embed.setTitle("Você precisa estar em um canal de voz");
       embed.setColor(0xd12f2f);
-      return interaction.reply({ embeds: [embed] });
+      return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     if (!member.voice.channelId === guild.members.me.voice.channelId) {
@@ -36,7 +36,7 @@ module.exports = {
         `Você não pode usar um comando de música em um canal diferente do meu <#${guild.members.me.voice.channelId}>`
       );
       embed.setColor(0xd12f2f);
-      return interaction.reply({ embeds: [embed] });
+      return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     await interaction.deferReply();

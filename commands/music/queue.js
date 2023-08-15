@@ -10,7 +10,7 @@ const {
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("queue")
+    .setName("fila")
     .setDescription("Mostra a fila de músicas"),
   async execute(interaction) {
     const { member, guild, channel } = interaction;
@@ -34,7 +34,7 @@ module.exports = {
     if (!voiceChannel) {
       embed.setTitle("Você precisa estar em um canal de voz");
       embed.setColor(0xd12f2f);
-      return interaction.reply({ embeds: [embed] });
+      return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     if (!member.voice.channelId === guild.members.me.voice.channelId) {
@@ -42,14 +42,14 @@ module.exports = {
         `Você não pode usar um comando de música em um canal diferente do meu <#${guild.members.me.voice.channelId}>`
       );
       embed.setColor(0xd12f2f);
-      return interaction.reply({ embeds: [embed] });
+      return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     try {
       const queue = await distube.getQueue(guild);
       if (!queue) {
         embed.setTitle("Não há músicas na fila");
-        return interaction.reply({ embeds: [embed] });
+        return interaction.reply({ embeds: [embed], ephemeral: true });
       }
       let queueEmbed = new EmbedBuilder();
 

@@ -1,4 +1,5 @@
 const distube = require("../index.js");
+const nodeHtmlToImage = require("node-html-to-image");
 const {
   EmbedBuilder,
   ActionRowBuilder,
@@ -6,13 +7,48 @@ const {
   ButtonStyle,
 } = require("discord.js");
 
-function disspace(nowQueue, nowTrack) {
+async function customImage(nowTrack) {
+  // const test = _arrayBufferToBase64(images);
+  // console.log(test);
+
+  // const newImage = nowTrack.thumbnail;
+  const musicName = nowTrack.name;
+  const musicAuthor = nowTrack.uploader.name;
+  const musicDuration = nowTrack.formattedDuration;
+  const musicURL = nowTrack.url;
+  const musicPlayerURL = nowTrack.thumbnail;
+  const discordUserAvatar = `https://cdn.discordapp.com/avatars/${nowTrack.user.id}/${nowTrack.user.avatar}.png`;
+
+  await fetch(
+    "https://dynamicimagebackend-production.up.railway.app/api/gerar-imagem",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        musicName,
+        musicAuthor,
+        musicDuration,
+        musicURL,
+        musicPlayerURL,
+        discordUserAvatar,
+      }),
+    }
+  );
+  const rand = Math.random().toString(36).slice(2);
+  const newImage = `https://dynamicimagebackend-production.up.railway.app/image.png?${rand}`;
+
+  return newImage;
+}
+
+async function disspace(nowQueue, nowTrack) {
   const embed = new EmbedBuilder()
     .setAuthor({
       name: `Tocando Agora...`,
       iconURL: "https://cdn.discordapp.com/emojis/741605543046807626.gif",
     })
-    .setImage(nowTrack.thumbnail)
+    .setImage((await customImage(nowTrack)) || nowTrack.thumbnail)
     .setColor("#00F090")
     .setDescription(`**[${nowTrack.name}](${nowTrack.url})**`)
     .addFields({
@@ -51,32 +87,32 @@ function disspace(nowQueue, nowTrack) {
   const row = new ActionRowBuilder()
     .addComponents(
       new ButtonBuilder()
-        .setCustomId("pause")
-        .setEmoji("<:PlayPause:1131698276572340235>")
-        .setStyle(ButtonStyle.Success)
-    )
-    .addComponents(
-      new ButtonBuilder()
         .setCustomId("previous")
-        .setEmoji("<:Backward:1131698269882433536>")
+        .setEmoji("<:Retroceder:1141807767124971587>")
         .setStyle(ButtonStyle.Success)
     )
     .addComponents(
       new ButtonBuilder()
-        .setCustomId("stop")
-        .setEmoji("<:Stop:1131698282331119666>")
+        .setCustomId("pause")
+        .setEmoji("<:TocarPausar:1141807768735584266>")
         .setStyle(ButtonStyle.Success)
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("skip")
-        .setEmoji("<:Forward:1131698273011376209>")
+        .setEmoji("<:Avancar:1141807751899643924>")
+        .setStyle(ButtonStyle.Success)
+    )
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("stop")
+        .setEmoji("<:Parar:1141807762725159075>")
         .setStyle(ButtonStyle.Success)
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("loop")
-        .setEmoji("<:Loop:1131698274399699085>")
+        .setEmoji("<:Repetir:1141807764562264234>")
         .setStyle(ButtonStyle.Success)
     );
 
@@ -84,31 +120,31 @@ function disspace(nowQueue, nowTrack) {
     .addComponents(
       new ButtonBuilder()
         .setCustomId("shuffle")
-        .setEmoji("<:Shuffle:1131698279353155704>")
+        .setEmoji("<:Misturar:1141807759965294663>")
         .setStyle(ButtonStyle.Success)
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("voldown")
-        .setEmoji("<:VolumeSmall:1131698291273371678>")
-        .setStyle(ButtonStyle.Success)
-    )
-    .addComponents(
-      new ButtonBuilder()
-        .setCustomId("clear")
-        .setEmoji("<:ClearList:1131698271044243578>")
+        .setEmoji("<:Menosvolume:1141807757993988097>")
         .setStyle(ButtonStyle.Success)
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("volup")
-        .setEmoji("<:VolumeLoud:1131698283589402784>")
+        .setEmoji("<:Maisvolume:1141807757113171988>")
         .setStyle(ButtonStyle.Success)
     )
     .addComponents(
       new ButtonBuilder()
-        .setCustomId("queue")
-        .setEmoji("<:Queue:1131698278182944780>")
+        .setCustomId("clear")
+        .setEmoji("<:Limpar:1141807754449793034>")
+        .setStyle(ButtonStyle.Success)
+    )
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId("autoplay")
+        .setEmoji("<:Autoplay:1141807750645559316>")
         .setStyle(ButtonStyle.Success)
     );
 
@@ -131,7 +167,7 @@ const sendExitMsg = async (queue) => {
   embed.setTitle("Não há músicas na fila");
   embed.setColor(0x00f090);
   embed.setImage(
-    "https://cdn.discordapp.com/attachments/1131702965586116719/1140736476242522384/Sem_musicas.jpg"
+    "https://cdn.discordapp.com/attachments/1131702965586116719/1141546366124965898/Parado.png"
   );
   embed.setFooter({
     text: "Participe de um canal de voz e organize músicas por nome ou url aqui.",
@@ -154,7 +190,7 @@ distube.on("playSong", async (queue, track) => {
   playing = [];
 
   var newQueue = distube.getQueue(queue.id);
-  var data = disspace(newQueue, track);
+  var data = await disspace(newQueue, track);
 
   const nowplay = await queue.textChannel.send(data);
   playing.push(nowplay);
@@ -358,49 +394,38 @@ distube.on("playSong", async (queue, track) => {
       setTimeout(() => {
         message.deleteReply();
       }, 5000);
-    } else if (id === "queue") {
+    } else if (id === "autoplay") {
       if (!queue) {
         collector.stop();
       }
-      const pagesNum = Math.ceil(queue.songs.length / 10);
-      if (pagesNum === 0) pagesNum = 1;
+      const autoplay = queue.toggleAutoplay();
+      if (autoplay) {
+        message.reply({
+          content: "`🎶 Modo autoplay ativado`",
+          ephemeral: true,
+        });
 
-      const songStrings = [];
-      for (let i = 1; i < queue.songs.length; i++) {
-        const song = queue.songs[i];
-        songStrings.push(
-          `**${i}.** [${song.name}](${song.url}) \`[${song.formattedDuration}]\` • ${song.user}
-          `
-        );
+        setTimeout(() => {
+          try {
+            message.deleteReply();
+          } catch (error) {
+            return null;
+          }
+        }, 5000);
+      } else {
+        message.reply({
+          content: "`🎶 Modo autoplay desativado`",
+          ephemeral: true,
+        });
+
+        setTimeout(() => {
+          try {
+            message.deleteReply();
+          } catch (error) {
+            return null;
+          }
+        }, 5000);
       }
-
-      const pages = [];
-      for (let i = 0; i < pagesNum; i++) {
-        const str = songStrings.slice(i * 10, i * 10 + 10).join("");
-        const embed = new EmbedBuilder()
-          .setAuthor({
-            name: `Queue - ${message.guild.name}`,
-            iconURL: message.guild.iconURL({ dynamic: true }),
-          })
-          .setThumbnail(queue.songs[0].thumbnail)
-          .setColor(0x2fd193)
-          .setDescription(
-            `**Tocando agora:**\n**[${queue.songs[0].name}](${
-              queue.songs[0].url
-            })** \`[${queue.songs[0].formattedDuration}]\` • ${
-              queue.songs[0].user
-            }\n\n**Resto da fila**${str == "" ? "  Nada" : "\n" + str}`
-          )
-          .setFooter({
-            text: `Página • ${i + 1}/${pagesNum} | ${
-              queue.songs.length
-            } • Músicas | ${queue.formattedDuration} • Duração total`,
-          });
-
-        pages.push(embed);
-      }
-
-      message.reply({ embeds: [pages[0]], ephemeral: true });
     } else {
       return;
     }

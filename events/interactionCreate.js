@@ -17,7 +17,7 @@ module.exports = {
     if (interaction.type == InteractionType.ApplicationCommandAutocomplete) {
       const Random =
         SEARCH_DEFAULT[Math.floor(Math.random() * SEARCH_DEFAULT.length)];
-      if (interaction.commandName == "play") {
+      if (interaction.commandName == "tocar") {
         let choice = [];
         await ytsr(interaction.options.getString("query") || Random, {
           safeSearch: false,

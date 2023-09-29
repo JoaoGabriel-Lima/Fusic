@@ -102,7 +102,6 @@ module.exports = {
     } catch (error) {
       const embed = new EmbedBuilder();
       embed.setTitle("Ocorreu um erro ao tocar a música");
-      console.log(error);
       embed.setColor(0xd12f2f);
       embed.setDescription(error.message);
 

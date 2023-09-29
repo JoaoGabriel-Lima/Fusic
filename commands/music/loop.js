@@ -43,17 +43,25 @@ module.exports = {
           content: "`🎶 O modo de loop foi desativado`",
           ephemeral: true,
         });
+        global.statusObject.loop = false;
+        global.nowplay.edit({ components: global.updateRows() });
       }
       if (mode == "1") {
         interaction.reply({
           content: "`🎶 O modo de loop vai repetir a música atual`",
           ephemeral: true,
         });
+        global.statusObject.loop = true;
+        global.nowplay.edit({ components: global.updateRows() });
       }
       if (mode == "2") {
         interaction.reply({
           content: "`🎶 O modo de loop vai repetir a fila`",
           ephemeral: true,
+        });
+        global.statusObject.loop = true;
+        global.nowplay.edit({
+          components: global.updateRows(),
         });
       }
       setTimeout(() => {

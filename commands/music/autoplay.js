@@ -30,6 +30,10 @@ module.exports = {
           content: "`🎶 Modo autoplay ativado`",
           ephemeral: true,
         });
+        global.statusObject.autoplay = true;
+        global.nowplay.edit({
+          components: global.updateRows(),
+        });
 
         setTimeout(() => {
           try {
@@ -42,6 +46,10 @@ module.exports = {
         interaction.reply({
           content: "`🎶 Modo autoplay desativado`",
           ephemeral: true,
+        });
+        global.statusObject.autoplay = false;
+        global.nowplay.edit({
+          components: global.updateRows(),
         });
 
         setTimeout(() => {

@@ -25,6 +25,8 @@ module.exports = {
 
     try {
       if (queue.paused) {
+        global.statusObject.paused = false;
+        global.nowplay.edit({ components: global.updateRows() });
         await queue.resume();
         interaction.reply({
           content: "`🎶 Música despausada`",
@@ -39,6 +41,8 @@ module.exports = {
         }, 5000);
       } else {
         await queue.pause();
+        global.statusObject.paused = true;
+        global.nowplay.edit({ components: global.updateRows() });
         interaction.reply({
           content: "`🎶 Música pausada`",
           ephemeral: true,

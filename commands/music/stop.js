@@ -3,7 +3,7 @@ const distube = require("../../index.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("desconectar")
+    .setName("sair")
     .setDescription("Sai do canal de voz"),
   async execute(interaction) {
     const { member, guild, channel } = interaction;
@@ -19,6 +19,13 @@ module.exports = {
 
     const queue = distube.getQueue(guild);
     if (!queue) {
+      try {
+        await distube.voices.leave(guild);
+        // guild.me.voice.channel.leave();
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
       embed.setTitle("Não há músicas na fila");
       return interaction.reply({ embeds: [embed], ephemeral: true });
     }

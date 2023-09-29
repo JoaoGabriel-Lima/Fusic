@@ -38,7 +38,6 @@ module.exports = {
         });
       const duration = song.formattedDuration;
       const percentage = currentTime / song.duration;
-      //   console.log(percentage);
       const progress = Math.round(percentage * 10);
       const emptyProgress = 10 - progress;
       const progressText = "▇".repeat(progress);
